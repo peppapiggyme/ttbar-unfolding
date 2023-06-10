@@ -33,8 +33,8 @@ Collection of works on unfolding practices using $t\bar{t}$ NLO samples.
 
 | Split | Status | Size | File |
 | --    | --     | --   | --   |
-| Train | ![](https://img.shields.io/badge/%20-done-brightgreen) | 100k | ttbar_nlo_ATLAS_PileUp.root |
-| Test  | ![](https://img.shields.io/badge/%20-pending-orange)   | 100k | ttbar_nlo_ATLAS_PileUp_Test.root |
+| Train | ![done](resources/status-done-brightgreen.svg)  | 100k | ttbar_nlo_ATLAS_PileUp.root      |
+| Test  | ![pending](resources/status-pending-orange.svg) | 100k | ttbar_nlo_ATLAS_PileUp_Test.root |
 
  100k for training , 100k for testing 
 
