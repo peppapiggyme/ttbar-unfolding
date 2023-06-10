@@ -8,7 +8,12 @@
 // Authors: Tim Adye <T.J.Adye@rl.ac.uk> and Fergus Wilson
 // <fwilson@slac.stanford.edu>
 //
+// (Modified by Bowen Zhang)
+//
 //==============================================================================
+
+// See also:
+// https://statisticalmethods.web.cern.ch/StatisticalMethods/unfolding/RooUnfold_01-Methods/
 
 #if !(defined(__CINT__) || defined(__CLING__)) || defined(__ACLIC__)
 #include <iostream>
@@ -17,13 +22,17 @@ using std::endl;
 
 #include "TCanvas.h"
 #include "TH1D.h"
+#include "TLegend.h"
 #include "TRandom.h"
+#include "TStyle.h"
+#include "TROOT.h"
 
 #include "RooUnfoldBayes.h"
+#include "RooUnfoldInvert.h"
 #include "RooUnfoldResponse.h"
-//#include "RooUnfoldSvd.h"
-//#include "RooUnfoldTUnfold.h"
-//#include "RooUnfoldIds.h"
+#include "RooUnfoldSvd.h"
+#include "RooUnfoldTUnfold.h"
+#include "RooUnfoldIds.h"
 #endif
 
 //==============================================================================
@@ -54,17 +63,51 @@ void RooUnfoldExample()
     cout << "==================================== TRAIN "
             "===================================="
          << endl;
+    // First term is the number of bins
+    // The variable ranges from -10 to 10
     RooUnfoldResponse response(40, -10.0, 10.0);
+
+    auto* f0 = new TH1F("f0", "f0", 40, -10, 10);
+    auto* g0 = new TH1F("g0", "g0", 40, -10, 10);
 
     // Train with a Breit-Wigner, mean 0.3 and width 2.5.
     for (Int_t i = 0; i < 100000; i++) {
         Double_t xt = gRandom->BreitWigner(0.3, 2.5);
-        Double_t x  = smear(xt);
-        if (x != cutdummy)
+        f0->Fill(xt);
+        Double_t x = smear(xt);
+        if (x != cutdummy) {
+            // x:  the measured values
+            // xt: the truth values
+            // Fill: mapping the event to a response function
             response.Fill(x, xt);
-        else
+            g0->Fill(x);
+        } else {
+            // Miss: calculate the efficiency of the system accross
+            // the space of the true system
             response.Miss(xt);
+        }
     }
+
+    auto* c = new TCanvas();
+    f0->SetStats(0);
+    f0->SetTitle("");
+    f0->SetFillColor(7);
+    f0->Draw();
+    g0->SetFillColor(42);
+    g0->Draw("same");
+    auto* leg = new TLegend(.55, 0.7, .9, .9);
+    leg->AddEntry(f0, "True Distribution");
+    leg->AddEntry(g0, "Predicted Measured");
+    leg->Draw();
+    c->Draw();
+    c->SaveAs("true-response.png");
+
+    auto* R  = response.HresponseNoOverflow();
+    auto* c1 = new TCanvas();
+    R->SetStats(0);
+    R->Draw("colz");
+    c1->Draw();
+    c1->SaveAs("response.png");
 
     cout << "==================================== TEST "
             "====================================="
@@ -81,27 +124,40 @@ void RooUnfoldExample()
     cout << "==================================== UNFOLD "
             "==================================="
          << endl;
-    RooUnfoldBayes unfold(&response, hMeas, 4); // OR
-    // RooUnfoldSvd     unfold (&response, hMeas, 20);   // OR
+    // RooUnfoldInvert  unfold(&response, hMeas); // OR
+    // RooUnfoldBayes   unfold(&response, hMeas, 4); // OR
+    RooUnfoldSvd     unfold (&response, hMeas, 20);   // OR
     // RooUnfoldTUnfold unfold (&response, hMeas);       // OR
     // RooUnfoldIds     unfold (&response, hMeas, 1);
 
     TH1D* hUnfold = (TH1D*) unfold.Hunfold();
 
-    TCanvas* c1 = new TCanvas("canvas", "canvas");
+    TCanvas* c2 = new TCanvas("canvas", "canvas");
 
     unfold.PrintTable(cout, hTrue);
-    hUnfold->Draw();
+    hUnfold->Draw("e1");
+    hUnfold->SetMarkerStyle(20);
+    hUnfold->SetMarkerSize(1.2);
+    hUnfold->SetMarkerColor(4);
+    hUnfold->SetLineColor(4);
+    hUnfold->SetStats(0);
     hMeas->Draw("SAME");
-    hTrue->SetLineColor(8);
+    hMeas->SetLineColor(1);
+    hTrue->SetLineColor(2);
     hTrue->Draw("SAME");
+    auto* leg2 = new TLegend(0.6, 0.6, 0.9, 0.9);
+    leg2->AddEntry(hTrue, "True distribution","l");
+    leg2->AddEntry(hMeas, "Measured distribution", "l");
+    leg2->AddEntry(hUnfold, "Unfolded distribution","lep");
+    leg2->Draw();
 
-    c1->SaveAs("RooUnfoldExample.pdf");
+    c2->SaveAs("unfolding.png");
 }
 
 #ifndef __CINT__
 int main()
 {
+    gStyle->SetErrorX(0.5f);
     RooUnfoldExample();
     return 0;
 } // Main program when run stand-alone

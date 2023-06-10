@@ -2,10 +2,3 @@
 .vscode/
 build/
 run/
-
-# files
-*.root
-*.png
-*.eps
-*.pdf
-*.log
