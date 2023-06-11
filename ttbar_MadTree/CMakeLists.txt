@@ -15,10 +15,10 @@ endif()
 
 message(STATUS "Configuring c++")
 set(CMAKE_CXX_EXTENSIONS ON)
-if (NOT DEFINED RELEASE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wpedantic -Wextra -g -Og")
+if(NOT DEFINED RELEASE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wpedantic -Wextra -g -Og")
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wpedantic -Wextra -O3")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wpedantic -Wextra -O3")
 endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
@@ -35,9 +35,7 @@ file(GLOB_RECURSE RECO_INCFILE include/*.hpp)
 
 set(RECO_INCDIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_library(${PROJECT_NAME} SHARED 
-  ${RECO_SRCFILE}
-  ${RECO_INCFILE})
+add_library(${PROJECT_NAME} SHARED ${RECO_SRCFILE} ${RECO_INCFILE})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${RECO_INCDIR})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${ROOT_LIBRARIES} pthread stdc++fs)
@@ -48,9 +46,7 @@ install(
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
 
-install(
-  FILES ${RECO_INCFILE} 
-  DESTINATION include)
+install(FILES ${RECO_INCFILE} DESTINATION include)
 
 set(EXE_NAME RecoTree)
 
@@ -60,6 +56,4 @@ target_include_directories(${EXE_NAME} PUBLIC ${RECO_INCDIR})
 target_link_libraries(${EXE_NAME} ${PROJECT_NAME})
 message(STATUS "Built executable ${EXE_NAME}")
 
-install(
-  TARGETS ${EXE_NAME}
-  RUNTIME DESTINATION bin)
+install(TARGETS ${EXE_NAME} RUNTIME DESTINATION bin)

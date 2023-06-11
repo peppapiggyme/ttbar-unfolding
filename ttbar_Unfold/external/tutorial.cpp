@@ -27,12 +27,7 @@ using std::endl;
 #include "TStyle.h"
 #include "TROOT.h"
 
-#include "RooUnfoldBayes.h"
-#include "RooUnfoldInvert.h"
-#include "RooUnfoldResponse.h"
-#include "RooUnfoldSvd.h"
-#include "RooUnfoldTUnfold.h"
-#include "RooUnfoldIds.h"
+#include "UnfoldFactory.hpp"
 #endif
 
 //==============================================================================
@@ -124,17 +119,16 @@ void RooUnfoldExample()
     cout << "==================================== UNFOLD "
             "==================================="
          << endl;
-    // RooUnfoldInvert  unfold(&response, hMeas); // OR
-    // RooUnfoldBayes   unfold(&response, hMeas, 4); // OR
-    RooUnfoldSvd     unfold (&response, hMeas, 20);   // OR
-    // RooUnfoldTUnfold unfold (&response, hMeas);       // OR
-    // RooUnfoldIds     unfold (&response, hMeas, 1);
 
-    TH1D* hUnfold = (TH1D*) unfold.Hunfold();
+    std::optional<double> reg;
+    auto mem_unfold = UnfoldFactory::Create(RooUnfolding::kSVD, &response, hMeas, reg);
+    auto unfold = mem_unfold.get();
+
+    TH1D* hUnfold = (TH1D*) unfold->Hunfold();
 
     TCanvas* c2 = new TCanvas("canvas", "canvas");
 
-    unfold.PrintTable(cout, hTrue);
+    unfold->PrintTable(cout, hTrue);
     hUnfold->Draw("e1");
     hUnfold->SetMarkerStyle(20);
     hUnfold->SetMarkerSize(1.2);

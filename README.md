@@ -33,8 +33,8 @@ Collection of works on unfolding practices using $t\bar{t}$ NLO samples.
 
 | Split | Status | Size | File |
 | --    | --     | --   | --   |
-| Train | ![done](resources/status-done-brightgreen.svg)  | 100k | ttbar_nlo_ATLAS_PileUp.root      |
-| Test  | ![pending](resources/status-pending-orange.svg) | 100k | ttbar_nlo_ATLAS_PileUp_Test.root |
+| Train | ![done](resources/status-done-brightgreen.svg) | 100k | ttbar_nlo_ATLAS_PileUp.root      |
+| Test  | ![done](resources/status-done-brightgreen.svg) | 100k | ttbar_nlo_ATLAS_PileUp_Test.root |
 
  100k for training , 100k for testing 
 
@@ -53,6 +53,12 @@ if (tree->Particle_Status[i] == 62) {
 ```
 * Reco: (bbmumu) Find two b-jets (efficiency is quite low..). Find two muons (leading two..)
 * Targetting kinematics: sum of transverse momentum (true and reconstructed $p_{\text{T}}^{t\bar{t}}$)
+>
+> Looks like the opposite of unfolding: inverse smearing..
+> 
+> <img src="resources/dist.png" alt="Distribution" height="240px"/>
+>
+* Fill/Miss response in ttbar_MadTree (![pending](resources/status-pending-orange.svg))
 * Output: reco_analysis__ttbar_nlo_ATLAS_PileUp.root
 * Produce ROOT tree. Might be utilised by advanced methods.
 ```
@@ -84,5 +90,5 @@ weight          = 0.00154058
 > 
 * Other reference: [TUnfold](https://root.cern.ch/doc/master/classTUnfold.html) | [TSVDUnfold](https://root.cern/doc/v628/classTSVDUnfold.html) | [TUnfold tutorial](https://root.cern.ch/doc/master/group__tutorial__unfold.html) | [RooUnfold](https://gitlab.cern.ch/RooUnfold/RooUnfold)
 * Traditional method: choose SVD method
-* Normalising flow unfolding (?)
-* Performance metric (?)
+* Normalising flow unfolding (![pending](resources/status-pending-orange.svg))
+* Performance metric (![pending](resources/status-pending-orange.svg))
