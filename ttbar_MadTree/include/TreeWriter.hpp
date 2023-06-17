@@ -9,7 +9,7 @@
 class TreeWriter
 {
 public:
-    TreeWriter();
+    explicit TreeWriter(const std::string_view& name);
 
 public:
     void Register(Index index);
@@ -24,6 +24,7 @@ private:
     void Init();
 
 private:
+    std::string_view m_name;
     TTree* m_tree;
     using Vmap = std::vector<float>;
     std::array<Index, N> m_variables;

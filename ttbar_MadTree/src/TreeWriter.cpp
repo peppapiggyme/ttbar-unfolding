@@ -4,9 +4,10 @@
 #include <algorithm>
 #include <iostream>
 
-TreeWriter::TreeWriter() : m_tree(nullptr), m_variables(), m_values()
+TreeWriter::TreeWriter(const std::string_view& name)
+    : m_name(name), m_tree(nullptr), m_variables(), m_values()
 {
-    m_tree = new TTree("nominal", "");
+    m_tree = new TTree(m_name.data(), "");
     m_tree->SetDirectory(0);
     m_tree->SetMaxTreeSize(500'000'000);
     InitBranches();

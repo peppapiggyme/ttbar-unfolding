@@ -33,6 +33,7 @@ enum class Index : int {
     xsec,
     xsec_error,
     sum_of_weight,
+    pass_reco_sel,
     end
 };
 
@@ -42,7 +43,7 @@ static std::array<std::string, N> Names {
     "ST_truth",   "t0_Pt",         "t1_Pt",        "tt_Pt",       "tt_m",
     "ST",         "mu0_Pt",        "mu1_Pt",       "b0_Pt",       "b1_Pt",
     "MET",        "n_jets",        "event_number", "weight",      "xsec",
-    "xsec_error", "sum_of_weight",
+    "xsec_error", "sum_of_weight", "pass_reco_sel"
 };
 
 inline const std::string& GetName(Index i)

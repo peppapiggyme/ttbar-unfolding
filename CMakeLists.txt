@@ -9,6 +9,8 @@ project(
 
 message(STATUS "Building ${CMAKE_PROJECT_NAME} ...")
 
+enable_testing()
+
 # externals
 add_subdirectory(RooUnfold)
 

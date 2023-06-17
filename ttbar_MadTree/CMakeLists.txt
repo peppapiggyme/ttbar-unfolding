@@ -38,7 +38,7 @@ set(RECO_INCDIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_library(${PROJECT_NAME} SHARED ${RECO_SRCFILE} ${RECO_INCFILE})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${RECO_INCDIR})
-target_link_libraries(${PROJECT_NAME} PUBLIC ${ROOT_LIBRARIES} pthread stdc++fs)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${ROOT_LIBRARIES} pthread stdc++fs PRIVATE RooUnfold)
 message(STATUS "Built shared library ${PROJECT_NAME}")
 
 install(
@@ -53,7 +53,7 @@ set(EXE_NAME RecoTree)
 add_executable(${EXE_NAME} utils/main.cpp)
 
 target_include_directories(${EXE_NAME} PUBLIC ${RECO_INCDIR})
-target_link_libraries(${EXE_NAME} ${PROJECT_NAME})
+target_link_libraries(${EXE_NAME} PRIVATE ${PROJECT_NAME} RooUnfold)
 message(STATUS "Built executable ${EXE_NAME}")
 
 install(TARGETS ${EXE_NAME} RUNTIME DESTINATION bin)

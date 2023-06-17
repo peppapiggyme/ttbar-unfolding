@@ -33,3 +33,5 @@ add_executable(Unfold utils/main.cpp)
 target_link_libraries(Unfold PRIVATE ${PROJECT_NAME} RooUnfold)
 
 install(TARGETS Tutorial Unfold RUNTIME DESTINATION bin)
+
+add_test(NAME Tutorial_Testing COMMAND Tutorial && rm -f *png)

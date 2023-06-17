@@ -4,11 +4,12 @@
 #include "Config.hpp"
 #include "DelphesTree.hpp"
 #include "Event.hpp"
+#include "HistogramKeeper.hpp"
+#include "TreeWriter.hpp"
 
 #include "TFile.h"
 
-class HistogramKeeper;
-class TreeWriter;
+#include <memory>
 
 class RecoTree : public DelphesTree
 {
@@ -18,15 +19,18 @@ public:
     virtual void Loop() override;
 
 private:
-    virtual void Entry(Long64_t i, HistogramKeeper* histKeeper,
-                       TreeWriter* treeWriter);
-    void         Register(HistogramKeeper* histKeeper, TreeWriter* treeWriter);
+    virtual void Entry(Long64_t i);
+    virtual void Register();
 
 private:
     Event    m_event;
     IOConfig m_config;
     TFile*   m_input;
     TFile*   m_output;
+
+    std::unique_ptr<HistogramKeeper> m_histKeeper;
+    std::unique_ptr<TreeWriter>      m_treeWriter;
+    std::unique_ptr<TreeWriter>      m_treeWriterTruth;
 };
 
 #endif
