@@ -44,11 +44,13 @@ void RecoTree::Loop()
 
     Long64_t nentries = fChain->GetEntries();
 
+    m_responseKeeper  = std::make_unique<ResponseKeeper>();
     m_histKeeper      = std::make_unique<HistogramKeeper>();
     m_treeWriter      = std::make_unique<TreeWriter>("reco");
     m_treeWriterTruth = std::make_unique<TreeWriter>("truth");
     Register();
 
+    m_responseKeeper->Show();
     m_histKeeper->Show();
     m_treeWriter->Show();
     m_treeWriterTruth->Show();
@@ -58,6 +60,7 @@ void RecoTree::Loop()
 
     // save histogram, etc to file
     m_output = TFile::Open(m_config.outputPath.c_str(), "recreate");
+    m_responseKeeper->SaveToFile(m_output);
     m_histKeeper->SaveToFile(m_output);
     m_treeWriter->SaveToFile(m_output);
     m_treeWriterTruth->SaveToFile(m_output);
@@ -138,6 +141,11 @@ void RecoTree::Entry(Long64_t i)
                                 m_event.Get(Index::pass_reco_sel));
     m_treeWriterTruth->Fill();
 
+    if (!m_event.Get(Index::pass_reco_sel)) {
+        m_responseKeeper->Miss(std::make_pair(Index::ST, Index::ST_truth),
+                               m_event.Get(Index::ST_truth), Event_Weight[0]);
+    }
+
     // apply cuts
     APPLY_CUT(hasTwoMu);
     APPLY_CUT(hasTwoB);
@@ -161,8 +169,14 @@ void RecoTree::Entry(Long64_t i)
     m_event.Set(Index::ST, Muon_PT[0] + Muon_PT[1] + Jet_PT[b0] + Jet_PT[b1]
                                + MissingET_MET[0]);
 
+    // fill response
+    m_responseKeeper->Fill(std::make_pair(Index::ST, Index::ST_truth),
+                           m_event.Get(Index::ST), m_event.Get(Index::ST_truth),
+                           Event_Weight[0]);
+
     // fill histograms
-    m_histKeeper->Fill(Index::tt_Pt, m_event.Get(Index::tt_Pt), Event_Weight[0]);
+    m_histKeeper->Fill(Index::tt_Pt, m_event.Get(Index::tt_Pt),
+                       Event_Weight[0]);
     m_histKeeper->Fill(Index::tt_m, m_event.Get(Index::tt_m), Event_Weight[0]);
     m_histKeeper->Fill(Index::ST, m_event.Get(Index::ST), Event_Weight[0]);
     m_histKeeper->Fill(Index::mu0_Pt, Muon_PT[0], Event_Weight[0]);
@@ -189,6 +203,9 @@ void RecoTree::Entry(Long64_t i)
 
 void RecoTree::Register()
 {
+    m_responseKeeper->Register(
+        { std::make_pair(Index::ST, Index::ST_truth), "", 100, 0, 1000 });
+
     m_histKeeper->Register({ Index::t0_truth_Pt, "", 500, 0, 500 });
     m_histKeeper->Register({ Index::t1_truth_Pt, "", 500, 0, 500 });
     m_histKeeper->Register({ Index::tt_truth_Pt, "", 500, 0, 500 });

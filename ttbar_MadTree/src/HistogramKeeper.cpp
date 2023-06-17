@@ -22,8 +22,8 @@ HistogramKeeper::~HistogramKeeper()
 
 void HistogramKeeper::Register(const HistogramConfig& hist)
 {
-    const std::string& name = GetName(hist.index);
-    TH1* h = new TH1F(name.c_str(), hist.title.c_str(), hist.nbins, hist.start,
+    const std::string_view name = GetName(hist.index);
+    TH1* h = new TH1F(name.data(), hist.title.data(), hist.nbins, hist.start,
                       hist.end);
     h->SetDirectory(0);
     if (m_content.find(hist.index) != m_content.end()) {

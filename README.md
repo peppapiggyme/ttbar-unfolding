@@ -59,8 +59,8 @@ if (tree->Particle_Status[i] == 62) {
 > 
 > <img src="resources/dist.png" alt="Distribution" height="240px"/>
 >
-* Fill/Miss response in ttbar_MadTree (![pending](resources/status-pending-orange.svg))
-* Output: reco_analysis__ttbar_nlo_ATLAS_PileUp.root
+* Fill/Miss response in ttbar_MadTree
+* Output: reco_analysis__ttbar_nlo_ATLAS_PileUp(_Test).root
 * Produce ROOT tree. Might be utilised by advanced methods.
 ```
 root [1] nominal->Show(1)
@@ -86,10 +86,22 @@ weight          = 0.00154058
 ### Unfolding
 
 * Tutorial: follow this [RooUnfold tutorial](https://statisticalmethods.web.cern.ch/StatisticalMethods/unfolding/RooUnfold_01-Methods/).
+
 > 
 > <img src="resources/unfolding.png" alt="Tutorial" height="240px"/>
 > 
+
 * Other reference: [TUnfold](https://root.cern.ch/doc/master/classTUnfold.html) | [TSVDUnfold](https://root.cern/doc/v628/classTSVDUnfold.html) | [TUnfold tutorial](https://root.cern.ch/doc/master/group__tutorial__unfold.html) | [RooUnfold](https://gitlab.cern.ch/RooUnfold/RooUnfold)
+
 * Traditional method: choose SVD method
+
+    * First try: Naive 100 bin, the testing performance is very poor!
+    > 
+    > <img src="resources/dist_train.png" alt="Tutorial" height="240px"/>
+    > 
+    > <img src="resources/dist_test.png" alt="Tutorial" height="240px"/>
+    > 
+    * Todo: impact of binnings, fill/miss. (![pending](resources/status-pending-orange.svg))
+
 * Normalising flow unfolding (![pending](resources/status-pending-orange.svg))
 * Performance metric (![pending](resources/status-pending-orange.svg))

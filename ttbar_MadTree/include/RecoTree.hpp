@@ -5,6 +5,7 @@
 #include "DelphesTree.hpp"
 #include "Event.hpp"
 #include "HistogramKeeper.hpp"
+#include "ResponseKeeper.hpp"
 #include "TreeWriter.hpp"
 
 #include "TFile.h"
@@ -28,6 +29,7 @@ private:
     TFile*   m_input;
     TFile*   m_output;
 
+    std::unique_ptr<ResponseKeeper>  m_responseKeeper;
     std::unique_ptr<HistogramKeeper> m_histKeeper;
     std::unique_ptr<TreeWriter>      m_treeWriter;
     std::unique_ptr<TreeWriter>      m_treeWriterTruth;

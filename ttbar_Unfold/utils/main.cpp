@@ -1,45 +1,61 @@
 
 #include "HistDraw.hpp"
 
+#include "RooUnfoldResponse.h"
 #include "TFile.h"
 #include "TH1.h"
+#include "UnfoldFactory.hpp"
 
 #include <iostream>
-
+#include <optional>
 
 int main(int argc, char* argv[])
 {
-    if (argc < 2) {
-        std::clog << "Usage:\n\tUnfold <path/to/histogram>\n";
+    if (argc < 3) {
+        std::clog << "Usage:\n\tUnfold <path/to/response> <path/to/reco>\n";
         exit(0);
     }
 
-    TFile* f = TFile::Open(argv[1], "read");
-    if (!f->IsOpen()) {
+    TFile* f_train = TFile::Open(argv[1], "read");
+    TFile* f_test  = TFile::Open(argv[2], "read");
+    if (!f_train->IsOpen()) {
         std::clog << "Failed to open " << argv[1] << ". exiting ..\n";
         exit(0);
     }
 
+    if (!f_test->IsOpen()) {
+        std::clog << "Failed to open " << argv[2] << ". exiting ..\n";
+        exit(0);
+    }
+
     // ST is the targetting kinematic variable
-    TH1* h_true = dynamic_cast<TH1*>(f->Get("ST_truth"));
-    TH1* h_reco = dynamic_cast<TH1*>(f->Get("ST"));
+    TH1* h_true = dynamic_cast<TH1*>(f_test->Get("ST_truth"));
+    TH1* h_reco = dynamic_cast<TH1*>(f_test->Get("ST"));
     h_true->Rebin(10);
     h_reco->Rebin(10);
 
-    if (!h_true || !h_reco)  {
+    if (!h_true || !h_reco) {
         std::clog << "Failed to retrive required histograms. exiting ..\n";
         exit(0);
     }
 
+    // Get Response object
+    RooUnfoldResponse* response =
+        dynamic_cast<RooUnfoldResponse*>(f_train->Get("Response_ST"));
+    std::optional<double> reg;
+    auto                  mem_unfold =
+        UnfoldFactory::Create(RooUnfold::kSVD, response, h_reco, reg);
+    auto unfold   = mem_unfold.get();
+    TH1* h_unfold = unfold->Hunfold();
+
     auto hist_draw = std::make_unique<HistDraw>();
-    hist_draw->Append({"Reco", "Reco", "lep", 1, 1, 1, h_reco});
-    hist_draw->Append({"True", "True", "lep", 2, 1, 1, h_true});
+    hist_draw->Append({ "True", "True", "f", 2, 1, 1, h_true });
+    hist_draw->Append({ "Unfold", "Unfold", "lep", 4, 1, 1, h_unfold });
+    hist_draw->Append({ "Reco", "Reco", "f", 1, 1, 1, h_reco });
     hist_draw->Draw("dist.png", "Sum of transverse momentum [GeV]", "Events");
 
-    f->Close();
-    h_true = nullptr;
-    h_reco = nullptr;
-    f = nullptr;
+    f_train->Close();
+    f_test->Close();
 
     return 0;
 }

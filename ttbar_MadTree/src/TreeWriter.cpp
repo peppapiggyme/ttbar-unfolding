@@ -61,8 +61,7 @@ void TreeWriter::InitBranches()
 {
     for (int i = 0; i < N; ++i) {
         if (m_variables[i] != Index::none)
-            m_tree->Branch(GetName(m_variables[i]).c_str(),
-                           m_values.data() + i);
+            m_tree->Branch(GetName(m_variables[i]).data(), m_values.data() + i);
     }
 }
 
