@@ -28,11 +28,8 @@ jobs:
         apt install -y git
 
     - uses: actions/checkout@v3
-  
-    - name: Checkout submodules
-      run: |
-        git config --global --add safe.directory /__w/ttbar-unfolding/ttbar-unfolding
-        git submodule update --init --recursive
+      with:
+        submodules: true
 
     - name: Check environment
       run: |
