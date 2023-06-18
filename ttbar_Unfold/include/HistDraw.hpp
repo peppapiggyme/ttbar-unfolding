@@ -3,6 +3,7 @@
 
 #include <list>
 #include <string>
+#include <string_view>
 
 struct HistEntry {
     std::string_view name;
@@ -24,7 +25,9 @@ public:
     void Draw(const std::string_view& name, 
               const std::string_view& x_title,
               const std::string_view& y_title) const;
+    void SetTag(const std::string_view& tag) { m_tag = tag; }
 
 private:
     std::list<HistEntry> m_hists;
+    std::string_view m_tag;
 };

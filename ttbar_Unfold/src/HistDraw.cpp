@@ -2,6 +2,7 @@
 
 #include "TCanvas.h"
 #include "TLegend.h"
+#include "TLatex.h"
 #include "TStyle.h"
 
 #include <iostream>
@@ -41,7 +42,14 @@ void HistDraw::Draw(const std::string_view& name,
 
         leg->AddEntry(cfg.hist, cfg.name_tex.data(), cfg.draw_option.data());
     }
+
+    TLatex* tex = new TLatex(0.2f, 0.8f, m_tag.data());
+    tex->SetNDC(true);
+    tex->SetTextFont(42);
+    tex->SetTextSize(0.036f);
+
     leg->Draw();
+    tex->Draw();
     c->SaveAs(name.data());
 
     delete c, leg;

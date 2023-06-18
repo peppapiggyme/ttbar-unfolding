@@ -96,12 +96,13 @@ weight          = 0.00154058
 * Traditional method: choose SVD method
 
     * First try: Naive 100 bin, the testing performance is very poor!
+    * Impact of binnings (less bin makes results significantly better for kBayes method, not for kSVD method), fill/miss (not really). 
+    * Second try: 40 bins from 0 to 800 GeV, kBayes method performs decent!
     > 
     > <img src="resources/dist_train.png" alt="Tutorial" height="240px"/>
     > 
     > <img src="resources/dist_test.png" alt="Tutorial" height="240px"/>
     > 
-    * Todo: impact of binnings, fill/miss. (![pending](resources/status-pending-orange.svg))
 
 * Normalising flow unfolding (![pending](resources/status-pending-orange.svg))
 * Performance metric (![pending](resources/status-pending-orange.svg))

@@ -11,8 +11,9 @@
 
 int main(int argc, char* argv[])
 {
-    if (argc < 3) {
-        std::clog << "Usage:\n\tUnfold <path/to/response> <path/to/reco>\n";
+    if (argc < 4) {
+        std::clog << "Usage:\n\tUnfold "
+                     "<path/to/response> <path/to/reco> <path/to/png>\n";
         exit(0);
     }
 
@@ -31,8 +32,6 @@ int main(int argc, char* argv[])
     // ST is the targetting kinematic variable
     TH1* h_true = dynamic_cast<TH1*>(f_test->Get("ST_truth"));
     TH1* h_reco = dynamic_cast<TH1*>(f_test->Get("ST"));
-    h_true->Rebin(10);
-    h_reco->Rebin(10);
 
     if (!h_true || !h_reco) {
         std::clog << "Failed to retrive required histograms. exiting ..\n";
@@ -44,15 +43,16 @@ int main(int argc, char* argv[])
         dynamic_cast<RooUnfoldResponse*>(f_train->Get("Response_ST"));
     std::optional<double> reg;
     auto                  mem_unfold =
-        UnfoldFactory::Create(RooUnfold::kSVD, response, h_reco, reg);
+        UnfoldFactory::Create(RooUnfold::kBayes, response, h_reco, reg);
     auto unfold   = mem_unfold.get();
     TH1* h_unfold = unfold->Hunfold();
 
     auto hist_draw = std::make_unique<HistDraw>();
+    hist_draw->SetTag("Bayes method");
     hist_draw->Append({ "True", "True", "f", 2, 1, 1, h_true });
     hist_draw->Append({ "Unfold", "Unfold", "lep", 4, 1, 1, h_unfold });
     hist_draw->Append({ "Reco", "Reco", "f", 1, 1, 1, h_reco });
-    hist_draw->Draw("dist.png", "Sum of transverse momentum [GeV]", "Events");
+    hist_draw->Draw(argv[3], "Sum of transverse momentum [GeV]", "Events");
 
     f_train->Close();
     f_test->Close();

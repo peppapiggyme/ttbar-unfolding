@@ -204,21 +204,21 @@ void RecoTree::Entry(Long64_t i)
 void RecoTree::Register()
 {
     m_responseKeeper->Register(
-        { std::make_pair(Index::ST, Index::ST_truth), "", 100, 0, 1000 });
+        { std::make_pair(Index::ST, Index::ST_truth), "", 40, 0, 800 });
 
-    m_histKeeper->Register({ Index::t0_truth_Pt, "", 500, 0, 500 });
-    m_histKeeper->Register({ Index::t1_truth_Pt, "", 500, 0, 500 });
-    m_histKeeper->Register({ Index::tt_truth_Pt, "", 500, 0, 500 });
-    m_histKeeper->Register({ Index::tt_truth_m, "", 800, 200, 1000 });
-    m_histKeeper->Register({ Index::ST_truth, "", 1000, 0, 1000 });
-    m_histKeeper->Register({ Index::tt_Pt, "", 500, 0, 500 });
-    m_histKeeper->Register({ Index::tt_m, "", 500, 0, 500 });
-    m_histKeeper->Register({ Index::ST, "", 1000, 0, 1000 });
-    m_histKeeper->Register({ Index::mu0_Pt, "", 500, 0, 500 });
-    m_histKeeper->Register({ Index::mu1_Pt, "", 500, 0, 500 });
-    m_histKeeper->Register({ Index::b0_Pt, "", 500, 0, 500 });
-    m_histKeeper->Register({ Index::b1_Pt, "", 500, 0, 500 });
-    m_histKeeper->Register({ Index::MET, "", 500, 0, 500 });
+    m_histKeeper->Register({ Index::t0_truth_Pt, "", 50, 0, 500 });
+    m_histKeeper->Register({ Index::t1_truth_Pt, "", 50, 0, 500 });
+    m_histKeeper->Register({ Index::tt_truth_Pt, "", 50, 0, 500 });
+    m_histKeeper->Register({ Index::tt_truth_m, "", 80, 200, 1000 });
+    m_histKeeper->Register({ Index::ST_truth, "", 40, 0, 800 });
+    m_histKeeper->Register({ Index::tt_Pt, "", 50, 0, 500 });
+    m_histKeeper->Register({ Index::tt_m, "", 50, 0, 500 });
+    m_histKeeper->Register({ Index::ST, "", 40, 0, 800 });
+    m_histKeeper->Register({ Index::mu0_Pt, "", 50, 0, 500 });
+    m_histKeeper->Register({ Index::mu1_Pt, "", 50, 0, 500 });
+    m_histKeeper->Register({ Index::b0_Pt, "", 50, 0, 500 });
+    m_histKeeper->Register({ Index::b1_Pt, "", 50, 0, 500 });
+    m_histKeeper->Register({ Index::MET, "", 50, 0, 500 });
     m_histKeeper->Register({ Index::n_jets, "", 20, 0, 20 });
     m_histKeeper->Register({ Index::sum_of_weight, "", 1, 0, 1 });
     m_histKeeper->Register({ Index::xsec, "", 1, 0, 1 });
