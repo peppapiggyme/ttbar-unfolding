@@ -11,7 +11,7 @@ Collection of works on unfolding practices using $t\bar{t}$ NLO samples.
 * `Version`: 0.1
 * `Workspace`: Artlas:~/Documents/projects/ttbar-unfolding/
 
-> See also https://trello.com/c/UBuyDELV
+> See also <https://trello.com/c/UBuyDELV>
 
 ## Samples
 
@@ -37,10 +37,12 @@ Collection of works on unfolding practices using $t\bar{t}$ NLO samples.
 | Train | ![done](resources/status-done-brightgreen.svg) | 100k | ttbar_nlo_ATLAS_PileUp.root      |
 | Test  | ![done](resources/status-done-brightgreen.svg) | 100k | ttbar_nlo_ATLAS_PileUp_Test.root |
 
- 100k for training , 100k for testing 
+ 100k for training , 100k for testing
 
 ### MadTree analysis
+
 * Truth: Find two original top-quark (by status == 62). Set them as true top-quarks.
+
 ```c++
 if (tree->Particle_Status[i] == 62) {
     if (tree->Particle_PID[i] == 6) {
@@ -52,16 +54,18 @@ if (tree->Particle_Status[i] == 62) {
     }
 }
 ```
+
 * Reco: (bbmumu) Find two b-jets (efficiency is quite low..). Find two muons (leading two..)
 * Targetting kinematics: sum of transverse momentum (true and reconstructed $p_{\text{T}}^{t\bar{t}}$)
 >
 > Looks like the opposite of unfolding: inverse smearing..
-> 
+>
 > <img src="resources/dist.png" alt="Distribution" height="240px"/>
 >
 * Fill/Miss response in ttbar_MadTree
 * Output: reco_analysis__ttbar_nlo_ATLAS_PileUp(_Test).root
 * Produce ROOT tree. Might be utilised by advanced methods.
+
 ```
 root [1] nominal->Show(1)
 ======> EVENT:1
@@ -87,22 +91,23 @@ weight          = 0.00154058
 
 * Tutorial: follow this [RooUnfold tutorial](https://statisticalmethods.web.cern.ch/StatisticalMethods/unfolding/RooUnfold_01-Methods/).
 
-> 
+>
 > <img src="resources/unfolding.png" alt="Tutorial" height="240px"/>
-> 
+>
 
 * Other reference: [TUnfold](https://root.cern.ch/doc/master/classTUnfold.html) | [TSVDUnfold](https://root.cern/doc/v628/classTSVDUnfold.html) | [TUnfold tutorial](https://root.cern.ch/doc/master/group__tutorial__unfold.html) | [RooUnfold](https://gitlab.cern.ch/RooUnfold/RooUnfold)
 
 * Traditional method: choose SVD method
 
-    * First try: Naive 100 bin, the testing performance is very poor!
-    * Impact of binnings (less bin makes results significantly better for kBayes method, not for kSVD method), fill/miss (not really). 
-    * Second try: 40 bins from 0 to 800 GeV, kBayes method performs decent!
-    > 
+  * First try: Naive 100 bin, the testing performance is very poor!
+  * Impact of binnings (less bin makes results significantly better for kBayes method, not for kSVD method), fill/miss (not really).
+  * Second try: 40 bins from 0 to 800 GeV, kBayes method performs decent!
+
+    >
     > <img src="resources/dist_train.png" alt="Tutorial" height="240px"/>
-    > 
+    >
     > <img src="resources/dist_test.png" alt="Tutorial" height="240px"/>
-    > 
+    >
 
 * Normalising flow unfolding (![pending](resources/status-pending-orange.svg))
 * Performance metric (![pending](resources/status-pending-orange.svg))

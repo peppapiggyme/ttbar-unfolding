@@ -46,6 +46,8 @@ int main(int argc, char* argv[])
         UnfoldFactory::Create(RooUnfold::kBayes, response, h_reco, reg);
     auto unfold   = mem_unfold.get();
     TH1* h_unfold = unfold->Hunfold();
+    h_unfold->SetName("Unfold");
+    h_unfold->SetDirectory(0);
 
     auto hist_draw = std::make_unique<HistDraw>();
     hist_draw->SetTag("Bayes method");
@@ -54,8 +56,15 @@ int main(int argc, char* argv[])
     hist_draw->Append({ "Reco", "Reco", "f", 1, 1, 1, h_reco });
     hist_draw->Draw(argv[3], "Sum of transverse momentum [GeV]", "Events");
 
+    TFile* f_output = TFile::Open("/tmp/output.root", "recreate");
+    f_output->cd();
+    h_true->Write();
+    h_reco->Write();
+    h_unfold->Write();
+
     f_train->Close();
     f_test->Close();
+    f_output->Close();
 
     return 0;
 }
