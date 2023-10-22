@@ -1,3 +1,7 @@
+<style>
+img[alt=my_plot] { height: 240px; }
+</style>
+
 ## Overview
 
 [![ROOT](https://img.shields.io/badge/ROOT-v6.28/04-blue)](https://root.cern.ch/)
@@ -61,7 +65,7 @@ if (tree->Particle_Status[i] == 62) {
 >
 > Looks like the opposite of unfolding: inverse smearing..
 >
-> <img src="resources/dist.png" alt="Distribution" height="240px"/>
+> ![my_plot](resources/dist.png)
 >
 * Fill/Miss response in ttbar_MadTree
 * Output: reco_analysis__ttbar_nlo_ATLAS_PileUp(_Test).root
@@ -92,9 +96,7 @@ weight          = 0.00154058
 
 * Tutorial: follow this [RooUnfold tutorial](https://statisticalmethods.web.cern.ch/StatisticalMethods/unfolding/RooUnfold_01-Methods/).
 
->
-> <img src="resources/unfolding.png" alt="Tutorial" height="240px"/>
->
+![my_plot](resources/unfolding.png)
 
 * Other reference: [TUnfold](https://root.cern.ch/doc/master/classTUnfold.html) | [TSVDUnfold](https://root.cern/doc/v628/classTSVDUnfold.html) | [TUnfold tutorial](https://root.cern.ch/doc/master/group__tutorial__unfold.html) | [RooUnfold](https://gitlab.cern.ch/RooUnfold/RooUnfold)
 
@@ -104,11 +106,9 @@ weight          = 0.00154058
   * Impact of binnings (less bin makes results significantly better for kBayes method, not for kSVD method), fill/miss (not really).
   * Second try: 40 bins from 0 to 800 GeV, kBayes method performs decent!
 
-    >
-    > <img src="resources/dist_train.png" alt="Tutorial" height="240px"/>
-    >
-    > <img src="resources/dist_test.png" alt="Tutorial" height="240px"/>
-    >
+![my_plot](resources/dist_train.png)
+
+![my_plot](resources/dist_test.png)
 
 * Normalising flow unfolding ![done](resources/status-done-brightgreen.svg)
 
@@ -117,11 +117,9 @@ weight          = 0.00154058
   * Be cautious with weights, including them does not garentee better performance. It depends on the distribution of weights ..
   * The current models are probably under-trained!
 
-    >
-    > <img src="resources/dist2d_realnvp_test.png" alt="Tutorial" height="240px"/>
-    > 
-    > <img src="resources/dist_realnvp_test.png" alt="Tutorial" height="240px"/>
-    >
+![my_plot](resources/dist2d_realnvp_test.png)
+
+![my_plot](resources/dist_realnvp_test.png)
 
 * Performance metric ![pending](resources/status-pending-orange.svg)
 
@@ -135,4 +133,4 @@ weight          = 0.00154058
 
 The traditional unfolding method can only unfold one variable at a time. However, the NN method can unfold all variable at once, e.g. [OmniFold](https://arxiv.org/abs/1911.09107).
 
-RealNVP method takes even number of features in the input. 2-D is tested, more variable might help to improve further. It's better to have uncorrelated features. 
+RealNVP method takes even number of features in the input. 2-D is tested, more variable might help to improve further. It's better to have uncorrelated features.
