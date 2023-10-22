@@ -1,14 +1,14 @@
 ## Overview
 
 [![ROOT](https://img.shields.io/badge/ROOT-v6.28/04-blue)](https://root.cern.ch/)
-[![TUFA](https://img.shields.io/badge/TUFA-v0.1-blue)](https://github.com/peppapiggyme/ttbar-unfolding)
+[![TUFA](https://img.shields.io/badge/TUFA-v0.2-blue)](https://github.com/peppapiggyme/ttbar-unfolding)
 [![CMake](https://github.com/peppapiggyme/ttbar-unfolding/actions/workflows/cmake.yml/badge.svg)](https://github.com/peppapiggyme/ttbar-unfolding/actions/workflows/cmake.yml)
 
 Collection of works on unfolding practices using $t\bar{t}$ NLO samples.
 
 * `Author`: Bowen Zhang
-* `Data`: 10/06/2023
-* `Version`: 0.1
+* `Data`: 22/10/2023
+* `Version`: 0.2
 * `Workspace`: Artlas:~/Documents/projects/ttbar-unfolding/
 
 > See also <https://trello.com/c/UBuyDELV>
@@ -22,6 +22,7 @@ Collection of works on unfolding practices using $t\bar{t}$ NLO samples.
 * `RooUnfold` (external): Roofit extension. Interface to common unfolding methods implemented in ROOT.
 * `ttbar_MadTree`: Tool to analysis the MG5PY8 $t\bar{t}$ samples. Fill trees and histograms.
 * `ttbar_Unfold`: Application of RooUnfold with kinematic distributions produced by ttbar_MadTree.
+* `FlowModel`: Contains testing code of using the normalising flow model for ttbar unfolding.
 * ...
 
 ## Details
@@ -97,7 +98,7 @@ weight          = 0.00154058
 
 * Other reference: [TUnfold](https://root.cern.ch/doc/master/classTUnfold.html) | [TSVDUnfold](https://root.cern/doc/v628/classTSVDUnfold.html) | [TUnfold tutorial](https://root.cern.ch/doc/master/group__tutorial__unfold.html) | [RooUnfold](https://gitlab.cern.ch/RooUnfold/RooUnfold)
 
-* Traditional method: choose SVD method
+* Traditional method: choose SVD method ![done](resources/status-done-brightgreen.svg)
 
   * First try: Naive 100 bin, the testing performance is very poor!
   * Impact of binnings (less bin makes results significantly better for kBayes method, not for kSVD method), fill/miss (not really).
@@ -109,5 +110,29 @@ weight          = 0.00154058
     > <img src="resources/dist_test.png" alt="Tutorial" height="240px"/>
     >
 
-* Normalising flow unfolding (![pending](resources/status-pending-orange.svg))
-* Performance metric (![pending](resources/status-pending-orange.svg))
+* Normalising flow unfolding ![done](resources/status-done-brightgreen.svg)
+
+  * First try: two 2-D RealNVP models, from gaussian to (ST, tt_Pt), and from gaussian to (ST_truth, tt_truth_Pt), encoder/decoder
+  * Only use events with positive weights in training (for stability). Result looks reasonable ..
+  * Be cautious with weights, including them does not garentee better performance. It depends on the distribution of weights ..
+  * The current models are probably under-trained!
+
+    >
+    > <img src="resources/dist2d_realnvp_test.png" alt="Tutorial" height="240px"/>
+    > 
+    > <img src="resources/dist_realnvp_test.png" alt="Tutorial" height="240px"/>
+    >
+
+* Performance metric ![pending](resources/status-pending-orange.svg)
+
+  * Test of similarity
+
+* Optimisation ![pending](resources/status-pending-orange.svg)
+
+  * Further improvements on the normalising flow method (?)
+
+### Discussion
+
+The traditional unfolding method can only unfold one variable at a time. However, the NN method can unfold all variable at once, e.g. [OmniFold](https://arxiv.org/abs/1911.09107).
+
+RealNVP method takes even number of features in the input. 2-D is tested, more variable might help to improve further. It's better to have uncorrelated features. 
