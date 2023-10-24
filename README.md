@@ -98,7 +98,7 @@ weight          = 0.00154058
 
 * Other reference: [TUnfold](https://root.cern.ch/doc/master/classTUnfold.html) | [TSVDUnfold](https://root.cern/doc/v628/classTSVDUnfold.html) | [TUnfold tutorial](https://root.cern.ch/doc/master/group__tutorial__unfold.html) | [RooUnfold](https://gitlab.cern.ch/RooUnfold/RooUnfold)
 
-* Traditional method: choose SVD method ![done](./resources/status-done-brightgreen.svg)
+* Traditional method: choose SVD method
 
   * First try: Naive 100 bin, the testing performance is very poor!
   * Impact of binnings (less bin makes results significantly better for kBayes method, not for kSVD method), fill/miss (not really).
@@ -108,7 +108,7 @@ weight          = 0.00154058
 
 ![my_plot](./resources/dist_test.png)
 
-* Normalising flow unfolding ![done](./resources/status-done-brightgreen.svg)
+* Normalising flow unfolding
 
   * First try: two 2-D RealNVP models, from gaussian to (ST, tt_Pt), and from gaussian to (ST_truth, tt_truth_Pt), encoder/decoder
   * Only use events with positive weights in training (for stability). Result looks reasonable ..
@@ -124,11 +124,11 @@ weight          = 0.00154058
 
 ![my_plot](./resources/dist_realnvp_test.png)
 
-* Performance metric ![done](./resources/status-done-brightgreen.svg)
+* Performance metric
 
   * Test of similarity: $\chi^2$-test between truth and unfolding histograms. Results are shown inside the plots.
 
-* Optimisation ![pending](./resources/status-pending-orange.svg)
+* Optimisation
 
   * Further improvements on the normalising flow method (?)
 
