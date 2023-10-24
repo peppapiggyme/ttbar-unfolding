@@ -1,3 +1,5 @@
+#ifndef UnfoldFactory_hpp
+#define UnfoldFactory_hpp
 
 #include "RooUnfold.h"
 #include "RooUnfoldErrors.h"
@@ -33,7 +35,10 @@ public:
      *
      * @return std::shared_ptr<RooUnfold>
      */
-    static std::shared_ptr<RooUnfold> Create(RooUnfold::Algorithm alg,
-                                             RooUnfoldResponse*   res,
-                                             const TH1* meas, const std::optional<double>& reg);
+    static std::shared_ptr<RooUnfold> Create(RooUnfold::Algorithm         alg,
+                                             RooUnfoldResponse*           res,
+                                             const TH1*                   meas,
+                                             const std::optional<double>& reg);
 };
+
+#endif

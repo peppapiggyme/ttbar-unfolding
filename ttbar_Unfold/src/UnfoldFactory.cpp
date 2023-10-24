@@ -15,10 +15,9 @@
 #include "RooUnfoldTH1Helpers.h"
 #include "RooUnfoldTUnfold.h"
 
-std::shared_ptr<RooUnfold> UnfoldFactory::Create(RooUnfold::Algorithm  alg,
-                                                 RooUnfoldResponse*    res,
-                                                 const TH1*            meas,
-                                                 const std::optional<double>& reg)
+std::shared_ptr<RooUnfold>
+UnfoldFactory::Create(RooUnfold::Algorithm alg, RooUnfoldResponse* res,
+                      const TH1* meas, const std::optional<double>& reg)
 {
     std::shared_ptr<RooUnfold> unfold;
 

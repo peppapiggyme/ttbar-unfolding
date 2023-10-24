@@ -1,24 +1,23 @@
 #include "HistDraw.hpp"
 
 #include "TCanvas.h"
-#include "TLegend.h"
 #include "TLatex.h"
+#include "TLegend.h"
 #include "TStyle.h"
 
 #include <iostream>
 
-void HistDraw::Draw(const std::string_view& name,
-                    const std::string_view& x_title,
-                    const std::string_view& y_title) const
+void HistDraw::Draw(const std::string& name, const std::string& x_title,
+                    const std::string& y_title) const
 {
     TCanvas* c   = new TCanvas("c", "c", 800, 600);
     TLegend* leg = new TLegend(0.75, 0.75, 0.9, 0.9);
 
-    bool first = true;
+    bool  first     = true;
     float max_value = 0;
 
     for (const auto& cfg : m_hists) {
-        max_value = std::max(max_value, (float)cfg.hist->GetMaximum());
+        max_value = std::max(max_value, (float) cfg.hist->GetMaximum());
     }
 
     for (const auto& cfg : m_hists) {
@@ -38,18 +37,24 @@ void HistDraw::Draw(const std::string_view& name,
         cfg.hist->SetLineStyle(cfg.line_style);
         cfg.hist->SetMarkerColor(cfg.color);
         cfg.hist->SetMarkerStyle(cfg.marker_style);
-        max_value = std::max(max_value, (float)cfg.hist->GetMaximum());
+        max_value = std::max(max_value, (float) cfg.hist->GetMaximum());
 
         leg->AddEntry(cfg.hist, cfg.name_tex.data(), cfg.draw_option.data());
     }
 
-    TLatex* tex = new TLatex(0.2f, 0.8f, m_tag.data());
-    tex->SetNDC(true);
-    tex->SetTextFont(42);
-    tex->SetTextSize(0.036f);
+    TLatex* tag = new TLatex(0.2f, 0.8f, m_tag.data());
+    tag->SetNDC(true);
+    tag->SetTextFont(42);
+    tag->SetTextSize(0.036f);
+
+    TLatex* res = new TLatex(0.2f, 0.7f, m_result.data());
+    res->SetNDC(true);
+    res->SetTextFont(42);
+    res->SetTextSize(0.036f);
 
     leg->Draw();
-    tex->Draw();
+    tag->Draw();
+    res->Draw();
     c->SaveAs(name.data());
 
     delete c, leg;

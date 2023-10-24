@@ -1,5 +1,6 @@
 
 #include "HistDraw.hpp"
+#include "SimilarityTest.hpp"
 
 #include "RooUnfoldResponse.h"
 #include "TFile.h"
@@ -50,7 +51,9 @@ int main(int argc, char* argv[])
     h_unfold->SetDirectory(0);
 
     auto hist_draw = std::make_unique<HistDraw>();
+    auto sim = std::make_unique<SimilarityTest>(h_true, h_unfold);
     hist_draw->SetTag("Bayes method");
+    hist_draw->SetResult(sim->GetResults());
     hist_draw->Append({ "True", "True", "f", 2, 1, 1, h_true });
     hist_draw->Append({ "Unfold", "Unfold", "lep", 4, 1, 1, h_unfold });
     hist_draw->Append({ "Reco", "Reco", "f", 1, 1, 1, h_reco });
