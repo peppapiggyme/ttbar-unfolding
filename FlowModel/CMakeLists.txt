@@ -8,3 +8,4 @@ project(
 message(STATUS "Building ${CMAKE_PROJECT_NAME}::${PROJECT_NAME} ...")
 
 install(PROGRAMS bin/realnvp_postproc.py DESTINATION bin)
+install(PROGRAMS bin/planar_dummy.py DESTINATION bin)
