@@ -5,14 +5,14 @@ img[alt=my_plot] { height: 240px; }
 ## Overview
 
 [![ROOT](https://img.shields.io/badge/ROOT-v6.28/04-blue)](https://root.cern.ch/)
-[![TUFA](https://img.shields.io/badge/TUFA-v0.3-blue)](https://github.com/peppapiggyme/ttbar-unfolding)
+[![TUFA](https://img.shields.io/badge/TUFA-v1.0-blue)](https://github.com/peppapiggyme/ttbar-unfolding)
 [![CMake](https://github.com/peppapiggyme/ttbar-unfolding/actions/workflows/cmake.yml/badge.svg)](https://github.com/peppapiggyme/ttbar-unfolding/actions/workflows/cmake.yml)
 
 Collection of works on unfolding practices using $t\bar{t}$ NLO samples.
 
 * `Author`: Bowen Zhang
 * `Data`: 22/10/2023
-* `Version`: 0.3
+* `Version`: 1.0
 * `Workspace`: Artlas:~/Documents/projects/ttbar-unfolding/
 
 > See also <https://trello.com/c/UBuyDELV>
@@ -119,7 +119,7 @@ weight          = 0.00154058
   
   ```text
   Reco  : 39000 /  40000, train_loss=1.983512, val_loss=1.970581, lr = 0.000125
-  Truth : 39000 /  40000, train_loss=1.038777, val_loss=1.035551, lr = 0.000125
+  Truth : 39000 /  40000, train_loss=1.038256, val_loss=1.035538, lr = 0.000125
   ```
 
 ![my_plot](resources/dist2d_realnvp_test.png)
@@ -127,9 +127,11 @@ weight          = 0.00154058
 ![my_plot](resources/dist_realnvp_test.png)
 
 * Performance metric ![done](resources/status-done-brightgreen.svg)
+
   * Test of similarity: $\chi^2$-test between truth and unfolding histograms. Results are shown inside the plots.
 
 * Optimisation ![pending](resources/status-pending-orange.svg)
+
   * Further improvements on the normalising flow method (?)
 
 ### Discussion
