@@ -1,6 +1,4 @@
-<style>
-img[alt=my_plot] { height: 240px; }
-</style>
+# TUFA
 
 ## Overview
 
@@ -39,8 +37,8 @@ Collection of works on unfolding practices using $t\bar{t}$ NLO samples.
 
 | Split | Status | Size | File |
 | --    | --     | --   | --   |
-| Train | ![done](resources/status-done-brightgreen.svg) | 100k | ttbar_nlo_ATLAS_PileUp.root      |
-| Test  | ![done](resources/status-done-brightgreen.svg) | 100k | ttbar_nlo_ATLAS_PileUp_Test.root |
+| Train | ![done](./resources/status-done-brightgreen.svg) | 100k | ttbar_nlo_ATLAS_PileUp.root      |
+| Test  | ![done](./resources/status-done-brightgreen.svg) | 100k | ttbar_nlo_ATLAS_PileUp_Test.root |
 
  100k for training , 100k for testing
 
@@ -65,7 +63,7 @@ if (tree->Particle_Status[i] == 62) {
 >
 > Looks like the opposite of unfolding: inverse smearing..
 >
-> ![my_plot](resources/dist.png)
+> ![my_plot](./resources/dist.png)
 >
 * Fill/Miss response in ttbar_MadTree
 * Output: reco_analysis__ttbar_nlo_ATLAS_PileUp(_Test).root
@@ -96,21 +94,21 @@ weight          = 0.00154058
 
 * Tutorial: follow this [RooUnfold tutorial](https://statisticalmethods.web.cern.ch/StatisticalMethods/unfolding/RooUnfold_01-Methods/).
 
-![my_plot](resources/unfolding.png)
+![my_plot](./resources/unfolding.png)
 
 * Other reference: [TUnfold](https://root.cern.ch/doc/master/classTUnfold.html) | [TSVDUnfold](https://root.cern/doc/v628/classTSVDUnfold.html) | [TUnfold tutorial](https://root.cern.ch/doc/master/group__tutorial__unfold.html) | [RooUnfold](https://gitlab.cern.ch/RooUnfold/RooUnfold)
 
-* Traditional method: choose SVD method ![done](resources/status-done-brightgreen.svg)
+* Traditional method: choose SVD method ![done](./resources/status-done-brightgreen.svg)
 
   * First try: Naive 100 bin, the testing performance is very poor!
   * Impact of binnings (less bin makes results significantly better for kBayes method, not for kSVD method), fill/miss (not really).
   * Second try: 40 bins from 0 to 800 GeV, kBayes method performs decent!
 
-![my_plot](resources/dist_train.png)
+![my_plot](./resources/dist_train.png)
 
-![my_plot](resources/dist_test.png)
+![my_plot](./resources/dist_test.png)
 
-* Normalising flow unfolding ![done](resources/status-done-brightgreen.svg)
+* Normalising flow unfolding ![done](./resources/status-done-brightgreen.svg)
 
   * First try: two 2-D RealNVP models, from gaussian to (ST, tt_Pt), and from gaussian to (ST_truth, tt_truth_Pt), encoder/decoder
   * Only use events with positive weights in training (for stability). Result looks reasonable ..
@@ -122,15 +120,15 @@ weight          = 0.00154058
   Truth : 39000 /  40000, train_loss=1.038256, val_loss=1.035538, lr = 0.000125
   ```
 
-![my_plot](resources/dist2d_realnvp_test.png)
+![my_plot](./resources/dist2d_realnvp_test.png)
 
-![my_plot](resources/dist_realnvp_test.png)
+![my_plot](./resources/dist_realnvp_test.png)
 
-* Performance metric ![done](resources/status-done-brightgreen.svg)
+* Performance metric ![done](./resources/status-done-brightgreen.svg)
 
   * Test of similarity: $\chi^2$-test between truth and unfolding histograms. Results are shown inside the plots.
 
-* Optimisation ![pending](resources/status-pending-orange.svg)
+* Optimisation ![pending](./resources/status-pending-orange.svg)
 
   * Further improvements on the normalising flow method (?)
 
