@@ -56,6 +56,7 @@ bool Event::FindTwoTop(const DelphesTree* tree, int& t0, int& t1) const
             }
         }
     }
+    if (count < 2) return false;
     t0 = t[0];
     t1 = t[1];
     return count == 2;
