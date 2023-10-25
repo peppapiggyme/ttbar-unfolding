@@ -9,14 +9,18 @@ import torch.nn.init as init
 
 dual_layer = [[1.0, 0.0], [0.0, 1.0]]
 
+
 class FeedForward(nn.Module):
     def __init__(self, input_dim, hidden_dim):
         super().__init__()
         self.act = nn.Tanh()
         self.ff = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim), self.act,
-            nn.Linear(hidden_dim, hidden_dim), self.act,
-            nn.Linear(hidden_dim, input_dim), self.act,
+            nn.Linear(input_dim, hidden_dim),
+            self.act,
+            nn.Linear(hidden_dim, hidden_dim),
+            self.act,
+            nn.Linear(hidden_dim, input_dim),
+            self.act,
         )
 
     def forward(self, x):
@@ -79,6 +83,7 @@ class RealNVP_2D(nn.Module):
     def forward(self, x):
         y = x
         logdet_tot = 0
+
         for i in range(len(self.affine_couplings)):
             y, logdet = self.affine_couplings[i](y)
             logdet_tot = logdet_tot + logdet

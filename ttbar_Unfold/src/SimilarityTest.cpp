@@ -4,6 +4,7 @@
 
 SimilarityTest::SimilarityTest(TH1* h1, TH1* h2) : m_h1(h1), m_h2(h2)
 {
+    Kolmogorov();
     ChiSquare();
 }
 

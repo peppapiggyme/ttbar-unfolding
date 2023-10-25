@@ -3,14 +3,14 @@
 ## Overview
 
 [![ROOT](https://img.shields.io/badge/ROOT-v6.28/04-blue)](https://root.cern.ch/)
-[![TUFA](https://img.shields.io/badge/TUFA-v1.0-blue)](https://github.com/peppapiggyme/ttbar-unfolding)
+[![TUFA](https://img.shields.io/badge/TUFA-v1.1-blue)](https://github.com/peppapiggyme/ttbar-unfolding)
 [![CMake](https://github.com/peppapiggyme/ttbar-unfolding/actions/workflows/cmake.yml/badge.svg)](https://github.com/peppapiggyme/ttbar-unfolding/actions/workflows/cmake.yml)
 
 Collection of works on unfolding practices using $t\bar{t}$ NLO samples.
 
 * `Author`: Bowen Zhang
 * `Data`: 22/10/2023
-* `Version`: 1.0
+* `Version`: 1.1
 * `Workspace`: Artlas:~/Documents/projects/ttbar-unfolding/
 
 > See also <https://trello.com/c/UBuyDELV>
@@ -110,14 +110,14 @@ weight          = 0.00154058
 
 * Normalising flow unfolding
 
-  * First try: two 2-D RealNVP models, from gaussian to (ST, tt_Pt), and from gaussian to (ST_truth, tt_truth_Pt), encoder/decoder
+  * First try: two 2-D RealNVP models, from gaussian to (ST, b0_Pt), and from gaussian to (ST_truth, t0_truth_Pt), encoder/decoder
   * Only use events with positive weights in training (for stability). Result looks reasonable ..
   * Be cautious with weights, including them does not garentee better performance. It depends on the distribution of weights ..
   * The current models are probably under-trained!
   
   ```text
-  Reco  : 39000 /  40000, train_loss=1.983512, val_loss=1.970581, lr = 0.000125
-  Truth : 39000 /  40000, train_loss=1.038256, val_loss=1.035538, lr = 0.000125
+  Reco  : 39000 /  40000, train_loss=1.917694, val_loss=1.921390, lr = 0.000125
+  Truth : 39000 /  40000, train_loss=1.034327, val_loss=1.032731, lr = 0.000125
   ```
 
 ![my_plot](./resources/dist2d_realnvp_test.png)
@@ -128,9 +128,10 @@ weight          = 0.00154058
 
   * Test of similarity: $\chi^2$-test between truth and unfolding histograms. Results are shown inside the plots.
 
-* Optimisation
+* Optimisation & Tests ![pending](./resources/status-pending-orange.svg)
 
   * Further improvements on the normalising flow method (?)
+  * Test the performance on selected sample.
 
 ### Discussion
 
@@ -139,3 +140,10 @@ However, the NN method can unfold all variable at once, e.g. [OmniFold](https://
 * RealNVP method takes even number of features in the input. 2-D is tested, more variable might help to improve further.
 It's better to have uncorrelated features.
 * In the RealNVP method, the weights of the generated unfolding sample need investigation.
+* The decoder-only inference can also generate target distribution, the perf with be consistent with the encoder-decoder case if an inclusive set is used for testing.
+
+> In fact, it might reach better perf because the loss of decoder is smaller.
+
+The encoder-decoder is meant to be used in an exclusive set (after selections).
+
+![my_plot](./resources/dist_realnvp_decoder_test.png)

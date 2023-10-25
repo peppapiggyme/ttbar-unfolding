@@ -5,8 +5,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-two_pi = torch.tensor([2 * math.pi]).float()
 gen = torch.Generator()
+torch.manual_seed(123)
+np.random.seed(123)
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+two_pi = torch.tensor([2 * math.pi]).float().to(device)
 
 
 def log_gaussian(x, mu, sigma):
@@ -44,7 +48,7 @@ def quantile_scaling(df, var_name):
 
 def get_batch(x, w, batch_size=1024):
     idx = torch.randint(0, len(w), (batch_size,), generator=gen)
-    return x[idx], w[idx]
+    return x[idx], w[idx], idx
 
 
 def train(
@@ -54,7 +58,6 @@ def train(
     loss_train = list()
     loss_train_step = list()
     loss_val_step = list()
-
     for i in range(max_iter):
         if i > 0 and i % eval_step == 0:
             with torch.no_grad():
@@ -69,7 +72,7 @@ def train(
                 step.append(i)
                 loss_train_step.append(train_loss)
                 loss_val_step.append(val_loss)
-        xb, wb = get_batch(x, w, batch_size)
+        xb, wb, _ = get_batch(x, w, batch_size)
         z, log_det = model.inverse(xb)
         loss = torch.log(two_pi) + torch.mean(
             wb * (torch.sum(0.5 * z**2, -1) - log_det)
@@ -83,9 +86,9 @@ def train(
     return step, loss_train_step, loss_val_step
 
 
-def train_val_split(df, x, w):
-    x = torch.from_numpy(x).float()
-    w = torch.from_numpy(w).float()
+def train_val_split(df, x, w, device="cpu"):
+    x = torch.from_numpy(x).float().to(device)
+    w = torch.from_numpy(w).float().to(device)
     N = x.shape[0]
     N_split = int(0.8 * N)
     x_val, w_val = x[N_split:], w[N_split:]
@@ -102,7 +105,7 @@ def validate(model, x_val, w_val):
         w_val * (torch.sum(0.5 * z**2, -1) - log_det)
     )
     model.train()
-    return loss.item()
+    return loss.cpu().item()
 
 
 def draw_dist2d2(x, z):
@@ -111,7 +114,7 @@ def draw_dist2d2(x, z):
     plt.plot(x[:, 0], x[:, 1], ".")
     plt.title("Observed distribution")
     plt.xlabel(r"$S_{T}$")
-    plt.ylabel(r"sub b-jet $p_T$")
+    plt.ylabel(r"lead b-jet $p_T$")
 
     plt.subplot(1, 2, 2)
     plt.plot(z[:, 0], z[:, 1], ".")
@@ -129,13 +132,13 @@ def draw_dist2d3(x_, x_trans_, z_):
     plt.plot(x_[:, 0], x_[:, 1], ".")
     plt.title("Observed distribution")
     plt.xlabel(r"$S_{T}$")
-    plt.ylabel(r"sub b-jet $p_T$")
+    plt.ylabel(r"lead b-jet $p_T$")
 
     plt.subplot(1, 3, 2)
     plt.plot(x_trans_[:, 0], x_trans_[:, 1], ".")
     plt.title("Transformed distribution")
     plt.xlabel(r"$S_{T}$")
-    plt.ylabel(r"sub t-quark $p_T$")
+    plt.ylabel(r"lead t-quark $p_T$")
 
     plt.subplot(1, 3, 3)
     plt.plot(z_[:, 0], z_[:, 1], ".")
