@@ -140,11 +140,11 @@ weight          = 0.00154058
 
   Traditional method:
 
-  ![my_plot](./resources/sel.png)
+![my_plot](./resources/sel.png)
 
   Normalising flow method:
-  
-  ![my_plot](./resources/sel_nvp.png)
+
+![my_plot](./resources/sel_nvp.png)
 
   Both bad performance. Normalising flow can be improved by training encoder-decoder in one model (see Discussion).
 
