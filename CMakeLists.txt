@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 project(
   Tufa
-  VERSION 1.1
+  VERSION 1.2
   DESCRIPTION
     "TUFA: Ttbar UnFolding Analysis"
   LANGUAGES CXX)

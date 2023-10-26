@@ -3,14 +3,14 @@
 ## Overview
 
 [![ROOT](https://img.shields.io/badge/ROOT-v6.28/04-blue)](https://root.cern.ch/)
-[![TUFA](https://img.shields.io/badge/TUFA-v1.1-blue)](https://github.com/peppapiggyme/ttbar-unfolding)
+[![TUFA](https://img.shields.io/badge/TUFA-v1.2-blue)](https://github.com/peppapiggyme/ttbar-unfolding)
 [![CMake](https://github.com/peppapiggyme/ttbar-unfolding/actions/workflows/cmake.yml/badge.svg)](https://github.com/peppapiggyme/ttbar-unfolding/actions/workflows/cmake.yml)
 
 Collection of works on unfolding practices using $t\bar{t}$ NLO samples.
 
 * `Author`: Bowen Zhang
 * `Data`: 22/10/2023
-* `Version`: 1.1
+* `Version`: 1.2
 * `Workspace`: Artlas:~/Documents/projects/ttbar-unfolding/
 
 > See also <https://trello.com/c/UBuyDELV>
@@ -128,10 +128,23 @@ weight          = 0.00154058
 
   * Test of similarity: $\chi^2$-test between truth and unfolding histograms. Results are shown inside the plots.
 
-* Optimisation & Tests ![pending](./resources/status-pending-orange.svg)
+* Optimisation & Tests
 
-  * Further improvements on the normalising flow method (?)
-  * Test the performance on selected sample.
+  * Further improvements on the normalising flow method
+  * Test the performance on selected sample:
+  Apply cut on true $t\bar{t}$ invariant mass.
+  
+  ```cpp
+  APPLY_CUT(m_event.Get(Index::tt_truth_m) < 500 && m_event.Get(Index::tt_truth_m) > 200);
+  ```
+
+  Traditional method:
+  ![my_plot](./resources/sel.png)
+
+  Normalising flow method:
+  ![my_plot](./resources/sel_nvp.png)
+
+  Both bad performance. Normalising flow can be improved by training encoder-decoder in one model (see Discussion).
 
 ### Discussion
 
@@ -144,6 +157,21 @@ It's better to have uncorrelated features.
 
 > In fact, it might reach better perf because the loss of decoder is smaller.
 
-The encoder-decoder is meant to be used in an exclusive set (after selections).
+The encoder-decoder is meant to be used in an exclusive set (after selections). To achieve best perf, there are possible improvements:
+
+1) train encoder-decoder in one model e.g. [VAE](https://github.com/VincentStimper/normalizing-flows/blob/v1.7.2/normflows/core.py#L656).
+But the events must have true and reco information correspondingly.
+If they have to be trained separately, the latent space are not connected. Maybe apply additional layer between the two different latent normal distributed spaces (?).
+
+2) train conditional normalising flow model e.g. [Conditional](https://github.com/VincentStimper/normalizing-flows/blob/v1.7.2/normflows/core.py#L216)
 
 ![my_plot](./resources/dist_realnvp_decoder_test.png)
+
+## Conclusion
+
+In this specific instance, the utilization of the RealNVP model has proven to outperform the conventional unfolding method in generating a more accurate distribution of $S_T$ from the reco distribution.
+It's worth noting that this may not represent a universal solution for all real analysis scenarios.
+The full spectrum of possibilities offered by normalizing flow models remains largely unexplored.
+
+It's imperative to emphasize that the choice of which model to employ should be closely aligned with the specific nuances of the problem at hand.
+A prudent approach involves a comparative assessment, applying both the traditional and the novel methods, in order to determine the more suitable and effective solution for the real-world problem at play.

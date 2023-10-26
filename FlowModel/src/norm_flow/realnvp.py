@@ -65,7 +65,7 @@ class Affine_Coupling(nn.Module):
         return x, logdet
 
 
-class RealNVP_2D(nn.Module):
+class RealNVP(nn.Module):
     def __init__(self, masks, hidden_dim):
         super().__init__()
         self.hidden_dim = hidden_dim
@@ -99,3 +99,20 @@ class RealNVP_2D(nn.Module):
             logdet_tot = logdet_tot + logdet
 
         return x, logdet_tot
+
+
+class EncoderDecoder_ReadlNVP(nn.Module):
+    def __init__(self, masks, hidden_dim):
+        super().__init__()
+        self.encoder = RealNVP(masks[0], hidden_dim[0])
+        self.decoder = RealNVP(masks[1], hidden_dim[1])
+
+    def forward(self, x):
+        x0, logdet_en = self.encoder.inverse(x)
+        y, logdet_de = self.decoder.forward(x0)
+        return x0, logdet_en, y, logdet_de
+
+    def inverse(self, y):
+        x0, logdet_de = self.decoder.inverse(y)
+        x, logdet_en = self.encoder.forward(x0)
+        return x0, logdet_de, x, logdet_en

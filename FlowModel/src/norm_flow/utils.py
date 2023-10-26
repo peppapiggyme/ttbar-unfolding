@@ -51,7 +51,13 @@ def get_batch(x, w, batch_size=1024):
     return x[idx], w[idx], idx
 
 
-def train(
+def forward_kld(normal, log_det_tot, weight):
+    return torch.log(two_pi) + torch.mean(
+        weight * (torch.sum(0.5 * normal**2, -1) - log_det_tot)
+    )
+
+
+def train_realnvp(
     model, x, w, x_val, w_val, max_iter, eval_step, batch_size, optimizer, scheduler
 ):
     step = list()
@@ -74,9 +80,7 @@ def train(
                 loss_val_step.append(val_loss)
         xb, wb, _ = get_batch(x, w, batch_size)
         z, log_det = model.inverse(xb)
-        loss = torch.log(two_pi) + torch.mean(
-            wb * (torch.sum(0.5 * z**2, -1) - log_det)
-        )
+        loss = forward_kld(z, log_det, wb)
         loss_train.append(loss.item())
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
@@ -101,15 +105,13 @@ def train_val_split(df, x, w, device="cpu"):
 def validate(model, x_val, w_val):
     model.eval()
     z, log_det = model.inverse(x_val)
-    loss = torch.log(two_pi) + torch.mean(
-        w_val * (torch.sum(0.5 * z**2, -1) - log_det)
-    )
+    loss = forward_kld(z, log_det, w_val)
     model.train()
     return loss.cpu().item()
 
 
 def draw_dist2d2(x, z):
-    fig = plt.figure(2, figsize=(10, 4))
+    plt.figure(2, figsize=(10, 4))
     plt.subplot(1, 2, 1)
     plt.plot(x[:, 0], x[:, 1], ".")
     plt.title("Observed distribution")
